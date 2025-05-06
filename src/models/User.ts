@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface Message extends Document {
+export interface Message extends Document {
   content: string;
   createdAt: Date;
 }
@@ -16,14 +16,14 @@ const MessageSchema: Schema<Message> = new Schema({
   },
 });
 
-interface User extends Document {
+export interface User extends Document {
   username: string;
   email: string;
   password: string;
   verifyCode: string;
   verifyCodeExpiry: Date;
   isAcceptingMessage: boolean;
-  isverified: boolean;
+  isVerified: boolean;
   messages: Message[];
 }
 
@@ -52,7 +52,7 @@ const UserSchema: Schema<User> = new Schema({
     type: Date,
     required: [true, "Verify code expiry is required"],
   },
-  isverified: {
+  isVerified: {
     type: Boolean,
     default: false,
   },
@@ -68,4 +68,3 @@ const UserModel =
   mongoose.model<User>("User", UserSchema);
 
 export default UserModel;
- 
