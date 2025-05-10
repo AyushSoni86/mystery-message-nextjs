@@ -1,6 +1,6 @@
 import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
-import { GoogleGenAI } from "@google/genai";
+// import { GoogleGenAI } from "@google/genai";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -23,7 +23,7 @@ const prompt =
 //   return response.text;
 // }
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const result = streamText({
       model: google("models/gemini-1.5-flash"),

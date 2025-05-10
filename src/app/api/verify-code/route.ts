@@ -37,7 +37,7 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
-    const isCodeValid = user.verifyCode === code;
+    const isCodeValid = user.verifyCode === verifyCode;
     const isCodeExpired = new Date(user.verifyCodeExpiry) < new Date();
 
     if (!isCodeValid) {

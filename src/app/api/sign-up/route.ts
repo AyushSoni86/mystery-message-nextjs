@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
       }
     );
   } catch (error) {
-    console.error("Error registering user");
+    console.error("Error registering user: ", error);
     return NextResponse.json(
       {
         success: false,

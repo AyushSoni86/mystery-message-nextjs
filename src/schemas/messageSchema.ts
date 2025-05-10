@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const messageSchema = z.object({
+export const messageSchema = z.object({
   content: z
     .string()
     .min(10, { message: "content must be at least of 10 characters" })

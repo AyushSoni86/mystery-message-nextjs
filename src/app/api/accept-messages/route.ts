@@ -1,5 +1,5 @@
 import { dbConnect } from "@/lib/dbConnect";
-import { getServerSession, User } from "next-auth";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/options";
 import UserModel from "@/models/User";
@@ -55,7 +55,7 @@ export const POST = async (request: NextRequest) => {
   }
 };
 
-export const GET = async (request: NextRequest) => {
+export const GET = async () => {
   await dbConnect();
 
   const session = await getServerSession(authOptions);
