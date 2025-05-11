@@ -30,7 +30,7 @@ export const GET = async (request: NextRequest) => {
           message:
             usernameErrors?.length > 0
               ? usernameErrors.join(", ")
-              : "Invalid query parameters",
+              : "invalid query parameters",
         },
         { status: 400 }
       );
@@ -44,12 +44,12 @@ export const GET = async (request: NextRequest) => {
     });
     if (usernameAvailable) {
       return NextResponse.json(
-        { success: false, message: "Username already taken" },
+        { success: false, message: "username already taken" },
         { status: 400 }
       );
     }
     return NextResponse.json(
-      { success: false, message: "Username is available" },
+      { success: false, message: "username is available" },
       { status: 200 }
     );
   } catch (error) {

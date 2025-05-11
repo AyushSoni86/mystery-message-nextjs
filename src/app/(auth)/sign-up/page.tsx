@@ -46,18 +46,13 @@ const SignUp = () => {
     setIsSubmitting(true);
     try {
       const response = await axios.post<ApiResponse>("/api/sign-up", data);
-      toast.success("Signup Success", {
-        description: response.data.message,
-      });
+      toast.success(response.data.message);
       router.replace(`/verify/${username}`);
     } catch (error) {
-      console.error("Error in signup: ", error);
       const axiosError = error as AxiosError<ApiResponse>;
       const errorMessage =
         axiosError.response?.data.message || "Error in signup";
-      toast.error("Signup Failed", {
-        description: errorMessage,
-      });
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -68,20 +63,20 @@ const SignUp = () => {
       if (username) {
         setIsCheckingUsername(true);
         setUsernameMessage("");
-      }
-      try {
-        const response = await axios.get(
-          `/api/username-available?username=${username}`
-        );
-        setUsernameMessage(response.data.message);
-      } catch (error) {
-        const axiosError = error as AxiosError<ApiResponse>;
-        setUsernameMessage(
-          axiosError.response?.data.message || "Error checking username"
-        );
-        console.error(error);
-      } finally {
-        setIsCheckingUsername(false);
+
+        try {
+          const response = await axios.get(
+            `/api/username-available?username=${username}`
+          );
+          setUsernameMessage(response.data.message);
+        } catch (error) {
+          const axiosError = error as AxiosError<ApiResponse>;
+          setUsernameMessage(
+            axiosError.response?.data.message || "Error checking username"
+          );
+        } finally {
+          setIsCheckingUsername(false);
+        }
       }
     };
     checkUniqueUsername();
@@ -118,7 +113,7 @@ const SignUp = () => {
                   {!isCheckingUsername && usernameMessage && (
                     <p
                       className={`text-sm ${
-                        usernameMessage === "Username is unique"
+                        usernameMessage === "username is available"
                           ? "text-green-500"
                           : "text-red-500"
                       }`}
