@@ -3,6 +3,13 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { dbConnect } from "@/lib/dbConnect";
 import UserModel from "@/models/User";
+import { User } from "next-auth";
+
+// Define interfaces for credentials
+interface Credentials {
+  identifiers: string;
+  password: string;
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -13,13 +20,17 @@ export const authOptions: NextAuthOptions = {
         username: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: any): Promise<any> {
+      async authorize(credentials): Promise<User | null> {
+        // Cast credentials to our interface or return null if they don't exist
+        const creds = credentials as Credentials | undefined;
+        if (!creds) return null;
+
         await dbConnect();
         try {
           const user = await UserModel.findOne({
             $or: [
-              { email: credentials.identifiers },
-              { username: credentials.identifiers },
+              { email: creds.identifiers },
+              { username: creds.identifiers },
             ],
           });
 
@@ -32,27 +43,44 @@ export const authOptions: NextAuthOptions = {
           }
 
           const isPasswordCorrect = await bcrypt.compare(
-            credentials.password,
+            creds.password,
             user.password
           );
 
           if (isPasswordCorrect) {
-            return user;
+            // Convert Mongoose document to a plain object compatible with NextAuth User type
+            const userObject = {
+              _id: user._id,
+              username: user.username,
+              email: user.email,
+              isVerified: user.isVerified,
+              isAcceptingMessage: user.isAcceptingMessage,
+            } as User;
+            console.log("🚀 ~ authorize ~ user:", user);
+            console.log("🚀 ~ authorize ~ userObject:", userObject);
+            return userObject;
           } else {
             throw new Error("Incorrect Password");
           }
-        } catch (error: any) {
-          throw new Error(error);
+        } catch (error) {
+          // More specific error handling without using "any"
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : "An unknown error occurred";
+          throw new Error(errorMessage);
         }
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      token._id = user._id?.toString();
-      token.username = user.username;
-      token.isVerified = user.isVerified;
-      token.isAcceptingMessage = user.isAcceptingMessage;
+      if (user) {
+        token._id = user._id?.toString();
+        token.username = user.username;
+        token.isVerified = user.isVerified;
+        token.isAcceptingMessage = user.isAcceptingMessage;
+      }
       return token;
     },
     async session({ session, token }) {
