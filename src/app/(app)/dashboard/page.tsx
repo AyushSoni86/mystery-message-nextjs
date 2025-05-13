@@ -1,3 +1,5 @@
+"use client";
+
 import MessageCard from "@/components/MessageCard";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -71,7 +73,7 @@ const DashBoard = () => {
         setIsSwitchLoading(false);
       }
     },
-    [setIsLoading, setMessages, toast]
+    [setIsLoading, setMessages]
   );
 
   useEffect(() => {
@@ -84,18 +86,26 @@ const DashBoard = () => {
     const response = axios.post<ApiResponse>("/api/send-message", {
       acceptMessages: !acceptMessages,
     });
+    console.log(response);
+
     setValue("acceptMessages", !acceptMessages);
   };
 
-  const { username } = session?.user as User;
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
-  const profileUrl = `${baseUrl}/u/${username}`;
+  // Only try to access username if session and session.user exist
+  const username = session?.user ? (session.user as User).username : "";
+  const baseUrl =
+    typeof window !== "undefined"
+      ? `${window.location.protocol}//${window.location.host}`
+      : "";
+  const profileUrl = username ? `${baseUrl}/u/${username}` : "";
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(profileUrl);
-    toast.message("URL Copied!", {
-      description: "Profile URL has been copied to clipboard.",
-    });
+    if (navigator.clipboard && profileUrl) {
+      navigator.clipboard.writeText(profileUrl);
+      toast.message("URL Copied!", {
+        description: "Profile URL has been copied to clipboard.",
+      });
+    }
   };
 
   if (!session || !session.user) {
@@ -148,7 +158,7 @@ const DashBoard = () => {
       </Button>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         {messages.length > 0 ? (
-          messages.map((message, index) => (
+          messages.map((message) => (
             <MessageCard
               key={message._id}
               message={message}
