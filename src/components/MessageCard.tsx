@@ -30,7 +30,7 @@ import { ApiResponse } from "@/types/ApiResponse";
 
 type MessageCardProps = {
   message: Message;
-  onMessageDelete: (messageId: string | unknown) => void;
+  onMessageDelete: (messageId: string) => void;
 };
 
 const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
@@ -59,13 +59,7 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive">
-              {isDeleting ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                </>
-              ) : (
-                <X className="w-5 h-5" />
-              )}
+              <X className="w-5 h-5" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -79,7 +73,13 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={handleDeleteConfirm}>
-                Continue
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  </>
+                ) : (
+                  "Continue"
+                )}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

@@ -54,7 +54,7 @@ export const authOptions: NextAuthOptions = {
               username: user.username,
               email: user.email,
               isVerified: user.isVerified,
-              isAcceptingMessage: user.isAcceptingMessage,
+              isAcceptingMessages: user.isAcceptingMessages,
             } as User;
             console.log("🚀 ~ authorize ~ user:", user);
             console.log("🚀 ~ authorize ~ userObject:", userObject);
@@ -79,7 +79,7 @@ export const authOptions: NextAuthOptions = {
         token._id = user._id?.toString();
         token.username = user.username;
         token.isVerified = user.isVerified;
-        token.isAcceptingMessage = user.isAcceptingMessage;
+        token.isAcceptingMessages = user.isAcceptingMessages;
       }
       return token;
     },
@@ -88,7 +88,7 @@ export const authOptions: NextAuthOptions = {
         session.user._id = token._id;
         session.user.username = token.username;
         session.user.isVerified = token.isVerified;
-        session.user.isAcceptingMessage = token.isAcceptingMessage;
+        session.user.isAcceptingMessages = token.isAcceptingMessages;
       }
       return session;
     },

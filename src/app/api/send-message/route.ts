@@ -16,7 +16,7 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
-    if (!user.isAcceptingMessage) {
+    if (!user.isAcceptingMessages) {
       return NextResponse.json(
         { message: "User is not acepting the messages", success: false },
         { status: 403 }

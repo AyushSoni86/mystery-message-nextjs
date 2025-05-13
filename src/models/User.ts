@@ -1,9 +1,11 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface Message extends Document {
+  _id: string;
   content: string;
   createdAt: Date;
 }
+
 const MessageSchema: Schema<Message> = new Schema({
   content: {
     type: String,
@@ -22,7 +24,7 @@ export interface User extends Document {
   password: string;
   verifyCode: string;
   verifyCodeExpiry: Date;
-  isAcceptingMessage: boolean;
+  isAcceptingMessages: boolean;
   isVerified: boolean;
   messages: Message[];
 }
@@ -56,7 +58,7 @@ const UserSchema: Schema<User> = new Schema({
     type: Boolean,
     default: false,
   },
-  isAcceptingMessage: {
+  isAcceptingMessages: {
     type: Boolean,
     required: [true, "Verify code expiry is required"],
   },
