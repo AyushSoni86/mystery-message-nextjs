@@ -7,7 +7,7 @@ import { User } from "next-auth";
 
 // Define interfaces for credentials
 interface Credentials {
-  identifiers: string;
+  identifier: string;
   password: string;
 }
 
@@ -24,18 +24,17 @@ export const authOptions: NextAuthOptions = {
         // Cast credentials to our interface or return null if they don't exist
         const creds = credentials as Credentials | undefined;
         if (!creds) return null;
-
+        console.log("🚀 ~ authorize ~ creds:", creds);
         await dbConnect();
         try {
           const user = await UserModel.findOne({
-            $or: [
-              { email: creds.identifiers },
-              { username: creds.identifiers },
-            ],
+            $or: [{ email: creds.identifier }, { username: creds.identifier }],
           });
 
           if (!user) {
-            throw new Error("No user found with this email");
+            throw new Error(
+              `No user found with this email: ${creds.identifier}`
+            );
           }
 
           if (!user.isVerified) {
@@ -99,5 +98,5 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  secret: process.env.NEXT_AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 };

@@ -35,6 +35,7 @@ const SignUp = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    console.log("🚀 ~ onSubmit ~ data:", data);
     setIsSubmitting(true);
     const result = await signIn("credentials", {
       redirect: false,
@@ -49,7 +50,7 @@ const SignUp = () => {
     }
     if (result?.url) {
       toast.success("Login Successful");
-      router.replace("/dashboard");
+      router.push("/dashboard");
     }
     setIsSubmitting(false);
   };
@@ -72,7 +73,7 @@ const SignUp = () => {
                 <FormItem>
                   <FormLabel>Email/Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter Email" type="email" {...field} />
+                    <Input placeholder="Enter Email or Username" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -95,7 +96,11 @@ const SignUp = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full cursor-pointer"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

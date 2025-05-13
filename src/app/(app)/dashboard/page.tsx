@@ -59,7 +59,7 @@ const DashBoard = () => {
         const response = await axios.get<ApiResponse>("/api/get-messages");
         setMessages(response.data.messages || []);
         if (refresh) {
-          toast("Refreshed Messages", {
+          toast.info("Refreshed Messages", {
             description: "Showing latest messages",
           });
         }
@@ -118,14 +118,16 @@ const DashBoard = () => {
 
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{" "}
-        <div className="flex items-center">
+        <div className="flex items-center bg-gray-200 rounded-md pl-2">
           <input
             type="text"
             value={profileUrl}
             disabled
-            className="input input-bordered w-full p-2 mr-2"
+            className="input input-bordered w-full p-2 mr-2 "
           />
-          <Button onClick={copyToClipboard}>Copy</Button>
+          <Button onClick={copyToClipboard} className="cursor-pointer">
+            Copy
+          </Button>
         </div>
       </div>
 
@@ -143,7 +145,7 @@ const DashBoard = () => {
       <Separator />
 
       <Button
-        className="mt-4"
+        className="mt-4 cursor-pointer"
         variant="outline"
         onClick={(e) => {
           e.preventDefault();
