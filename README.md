@@ -60,8 +60,8 @@ A modern anonymous messaging platform inspired by Qooh.me that lets users receiv
 1. Clone the repo:
 
    ```bash
-   git clone https://github.com/your-username/anonymous-social-messaging.git
-   cd anonymous-social-messaging
+   git clone https://github.com/AyushSoni86/mystery-message-nextjs.git
+   cd mystery-message-nextjs
    ```
 
 2. Install dependencies:
@@ -113,7 +113,7 @@ A modern anonymous messaging platform inspired by Qooh.me that lets users receiv
 
 ## Usage
 
-- Visit a user's public profile link (e.g., `/profile/username`) to send them anonymous messages.
+- Visit a user's public profile link (e.g., `/u/username`) to send them anonymous messages.
 - Use the message input or click suggested AI-generated questions.
 - If you are unauthenticated, a "Create Your Account" button appears to encourage sign-up.
 - Users cannot send messages to themselves.
