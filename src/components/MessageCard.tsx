@@ -1,14 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 
 import {
   AlertDialog,
