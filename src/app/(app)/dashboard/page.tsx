@@ -83,12 +83,27 @@ const DashBoard = () => {
   }, [session, setValue, fetchAcceptMessages, getAllMessages]);
 
   const handleSwitchChange = async () => {
-    const response = axios.post<ApiResponse>("/api/accept-messages", {
-      acceptMessages: !acceptMessages,
-    });
-    console.log(response);
+    try {
+      const newState = !acceptMessages;
+      const response = await axios.post<ApiResponse>("/api/accept-messages", {
+        acceptMessages: newState,
+      });
 
-    setValue("acceptMessages", !acceptMessages);
+      if (response.data.success) {
+        toast.success(
+          newState
+            ? "You are now accepting anonymous messages."
+            : "You have disabled anonymous messages."
+        );
+
+        setValue("acceptMessages", newState);
+      } else {
+        toast.error("Failed to update message acceptance status.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Please try again.");
+    }
   };
 
   // Only try to access username if session and session.user exist
@@ -137,6 +152,7 @@ const DashBoard = () => {
           checked={acceptMessages}
           onCheckedChange={handleSwitchChange}
           disabled={isSwitchLoading}
+          className="cursor-pointer"
         />
         <span className="ml-2">
           Accept Messages: {acceptMessages ? "On" : "Off"}
