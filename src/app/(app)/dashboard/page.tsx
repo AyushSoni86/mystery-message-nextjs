@@ -83,7 +83,7 @@ const DashBoard = () => {
   }, [session, setValue, fetchAcceptMessages, getAllMessages]);
 
   const handleSwitchChange = async () => {
-    const response = axios.post<ApiResponse>("/api/send-message", {
+    const response = axios.post<ApiResponse>("/api/accept-messages", {
       acceptMessages: !acceptMessages,
     });
     console.log(response);
