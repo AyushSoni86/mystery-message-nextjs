@@ -24,14 +24,22 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Textarea } from "@/components/ui/textarea";
+import { useSession } from "next-auth/react";
 
 const parseStringMessages = (messageString: string): string[] => {
   return messageString.split("||");
 };
 
+const fallbackMessages = [
+  "What's your favorite movie?",
+  "Do you have any pets?",
+  "What's your dream job?",
+];
+
 const SendMessage = () => {
   const { username } = useParams();
   const [isLoading, setIsLoading] = useState(false);
+  const { data: session, status } = useSession();
 
   const initialMessageString =
     "What's your favorite movie?||Do you have any pets?||What's your dream job?";
@@ -45,6 +53,11 @@ const SendMessage = () => {
     api: "/api/suggest-messages",
     initialCompletion: initialMessageString,
   });
+
+  const safeMessages =
+    completion && parseStringMessages(completion).length > 0
+      ? parseStringMessages(completion)
+      : fallbackMessages;
 
   const onSubmit = async (data: z.infer<typeof messageSchema>) => {
     try {
@@ -112,16 +125,20 @@ const SendMessage = () => {
             )}
           />
           <div className="flex justify-center">
-            {isLoading ? (
-              <Button disabled>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
-              </Button>
-            ) : (
-              <Button type="submit" disabled={isLoading || !messageContent}>
-                Send It
-              </Button>
-            )}
+            <Button
+              type="submit"
+              disabled={isLoading || !messageContent}
+              className="cursor-pointer"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
+                </>
+              ) : (
+                "Send It"
+              )}
+            </Button>
           </div>
         </form>
       </Form>
@@ -130,10 +147,17 @@ const SendMessage = () => {
         <div className="space-y-2">
           <Button
             onClick={fetchSuggestedMessages}
-            className="my-4"
+            className="my-4 cursor-pointer"
             disabled={isSuggestLoading}
           >
-            Suggest Messages
+            {isSuggestLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                Generating...
+              </>
+            ) : (
+              "Suggest Messages"
+            )}
           </Button>
           <p>Click on any message below to select it.</p>
         </div>
@@ -144,28 +168,38 @@ const SendMessage = () => {
           <CardContent className="flex flex-col space-y-4">
             {error ? (
               <p className="text-red-500">{error.message}</p>
-            ) : (
-              parseStringMessages(completion).map((message, index) => (
+            ) : completion ? (
+              safeMessages.map((message, index) => (
                 <Button
                   key={index}
                   variant="outline"
-                  className="mb-2"
+                  className="mb-2 cursor-pointer"
                   onClick={() => handleMessageClick(message)}
                 >
                   {message}
                 </Button>
               ))
+            ) : (
+              <p className="text-muted-foreground">
+                No suggested messages available yet.
+              </p>
             )}
           </CardContent>
         </Card>
       </div>
-      {/* <Separator className="my-6" />
-      <div className="text-center">
-        <div className="mb-4">Get Your Message Board</div>
-        <Link href={"/sign-up"}>
-          <Button>Create Your Account</Button>
-        </Link>
-      </div> */}
+      {!session && status !== "loading" && (
+        <>
+          <Separator className="my-6" />
+          <div className="text-center">
+            <p className="mb-4 text-muted-foreground">
+              Want your own message board?
+            </p>
+            <Link href="/sign-up">
+              <Button className="cursor-pointer">Create Your Account</Button>
+            </Link>
+          </div>
+        </>
+      )}
     </div>
   );
 };
