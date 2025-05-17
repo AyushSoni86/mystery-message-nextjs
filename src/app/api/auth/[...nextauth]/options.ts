@@ -24,7 +24,6 @@ export const authOptions: NextAuthOptions = {
         // Cast credentials to our interface or return null if they don't exist
         const creds = credentials as Credentials | undefined;
         if (!creds) return null;
-        console.log("🚀 ~ authorize ~ creds:", creds);
         await dbConnect();
         try {
           const user = await UserModel.findOne({
@@ -55,8 +54,6 @@ export const authOptions: NextAuthOptions = {
               isVerified: user.isVerified,
               isAcceptingMessages: user.isAcceptingMessages,
             } as User;
-            console.log("🚀 ~ authorize ~ user:", user);
-            console.log("🚀 ~ authorize ~ userObject:", userObject);
             return userObject;
           } else {
             throw new Error("Incorrect Password");

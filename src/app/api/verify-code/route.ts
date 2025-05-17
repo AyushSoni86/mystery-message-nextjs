@@ -10,7 +10,6 @@ export const POST = async (request: NextRequest) => {
     const decodedUsername = decodeURIComponent(username);
 
     const result = verifySchema.safeParse({ code });
-    console.log("🚀 ~ POST ~ result:", result);
 
     if (!result.success) {
       const verifyCodeErrors = result.error.format().code?._errors || [];

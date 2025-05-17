@@ -32,7 +32,6 @@ const VerifyEmail = () => {
 
   const onSubmit = async (data: z.infer<typeof verifySchema>) => {
     setIsSubmitting(true);
-    console.log("🚀 ~ onSubmit ~ data:", data);
     try {
       const response = await axios.post<ApiResponse>("/api/verify-code", {
         username: username,

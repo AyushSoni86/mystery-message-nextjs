@@ -12,7 +12,6 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
   const url = request.nextUrl;
-  console.log("🚀 ~ middleware ~ token:", token);
 
   if (
     token &&

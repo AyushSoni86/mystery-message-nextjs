@@ -42,7 +42,6 @@ const SignUp = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
     setIsSubmitting(true);
     try {
       const response = await axios.post<ApiResponse>("/api/sign-up", data);
@@ -87,7 +86,7 @@ const SignUp = () => {
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Join True Feedback
+            Join Mystery Message
           </h1>
           <p className="mb-4">Sign up to start your anonymous adventure</p>
         </div>
